@@ -19,11 +19,15 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
+
 private:
     Ui::Widget *ui;
     QGraphicsScene *scene;
     Player *player;
     QTimer *timer;
+    QVector <QVector<int> > map;
+
+    void drawMap();
 };
 
 #endif // WIDGET_H

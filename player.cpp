@@ -1,12 +1,15 @@
 #include "player.h"
 
-Player::Player(QObject *parent) : QObject(parent), QGraphicsItem() {
+
+Player::Player(const QVector<QVector<int> > &map, QObject *parent): QObject(parent), QGraphicsItem() {
+    this->map = map;
     relX = 0;
     relY = 0;
 }
 
-Player::Player(int x, int y, QObject *parent) : QObject(parent), QGraphicsItem()
+Player::Player(int x, int y, const QVector<QVector<int> > &map, QObject *parent) : QObject(parent), QGraphicsItem()
 {
+    this->map = map;
     //used to spawn player at exact position
     relX = x;
     relY = y;
@@ -14,34 +17,32 @@ Player::Player(int x, int y, QObject *parent) : QObject(parent), QGraphicsItem()
 
 Player::~Player() {}
 
-int Player::getRelX()
+int Player::getRelX() const
 {
     return relX;
 }
 
-int Player::getRelY()
+int Player::getRelY() const
 {
     return relY;
 }
 
 void Player::slotGameTimer()
 {
-    if (GetAsyncKeyState(VK_LEFT)) relX--;
-    if (GetAsyncKeyState(VK_RIGHT)) relX++;
-    if (GetAsyncKeyState(VK_UP)) relY--;
-    if (GetAsyncKeyState(VK_DOWN)) relY++;
-
-    if (relX < 0) relX = 0;
-    if (relX > 10) relX = 10;
-    if (relY < 0) relY = 0;
-    if (relY > 10) relY = 10;
+    if (GetAsyncKeyState(VK_LEFT))
+        if (relX > 0 && map.at(relX-1).at(relY) != 1)
+            relX--;
+    if (GetAsyncKeyState(VK_RIGHT))
+        if (relX < 10 && map.at(relX+1).at(relY) != 1)
+            relX++;
+    if (GetAsyncKeyState(VK_UP))
+        if (relY > 0 && map.at(relX).at(relY-1) != 1)
+            relY--;
+    if (GetAsyncKeyState(VK_DOWN))
+        if (relY < 10 && map.at(relX).at(relY+1) != 1)
+            relY++;
 
     relToAbs();
-
-//    if (this->x() - 10 < -250) this->setX(-240);
-//    if (this->x() + 10 > 250) this->setX(240);
-//    if (this->y() - 10 < -250) this->setY(-240);
-//    if (this->y() + 10 > 250) this->setY(240);
 }
 
 QRectF Player::boundingRect() const

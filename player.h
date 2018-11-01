@@ -5,7 +5,8 @@
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QGraphicsScene>
-#include <QPair>
+#include <QList>
+#include <QVector>
 
 #include "windows.h"
 
@@ -14,12 +15,12 @@ class Player : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    explicit Player(QObject *parent = 0);
-    explicit Player(int x, int y, QObject *parent=0);
+    explicit Player(const QVector<QVector<int> > &map, QObject *parent = 0);
+    explicit Player(int x, int y, const QVector<QVector<int> > &map, QObject *parent=0);
     ~Player();
 
-    int getRelX();
-    int getRelY();
+    int getRelX() const;
+    int getRelY() const;
 
 public slots:
     void slotGameTimer();
@@ -31,6 +32,7 @@ protected:
 private:
     int relX, relY; //coordinates in relative scale (position on game map)
     void relToAbs(); //calculates absolute coordinates (position on scene)
+    QVector<QVector<int> > map; //copy of map to check collision with wall
 };
 
 #endif // PLAYER_H
