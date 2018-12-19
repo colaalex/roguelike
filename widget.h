@@ -6,6 +6,8 @@
 #include <QTimer>
 
 #include "player.h"
+#include "item.h"
+#include "food.h"
 
 namespace Ui {
 class Widget;
@@ -27,7 +29,14 @@ private:
     QTimer *timer;
     QVector <QVector<int> > map;
 
+    QList<QGraphicsItem*> items; //list of all items in game
+
+    int health, ammo; //store hp and ammo of players to be shown on labels
+
     void drawMap();
+
+private slots:
+    void slotDeleteItem(QGraphicsItem *item);
 };
 
 #endif // WIDGET_H

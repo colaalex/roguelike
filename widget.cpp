@@ -15,19 +15,30 @@ Widget::Widget(QWidget *parent) :
     drawMap();
     player = new Player(map);
 
+    auto food = new Food(3, 3); //add food to map, hardocoded
+    items.append(food);
+
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    //scene->setSceneRect(35, 35, 500, 500);
+
+    ui->hpLabel->setText(QString("Health: %1").arg(player->getHealth()));
+    ui->ammoLabel->setText(QString("Ammo: %1").arg(player->getAmmo()));
+
 
     scene->addItem(player);
     player->setPos(0,0);
 
+    scene->addItem(food);
+    food->setPos(300, 300);
+
     timer = new QTimer();
     connect(timer, &QTimer::timeout, player, &Player::slotGameTimer);
     timer->start(100);
+
+    connect(player, &Player::signalCheckItem, this, &Widget::slotDeleteItem);
 
 }
 
@@ -51,4 +62,19 @@ void Widget::drawMap()
                 break;
             }
         }
+}
+
+void Widget::slotDeleteItem(QGraphicsItem *item)
+{
+    foreach(QGraphicsItem *it, items) {
+        if (it == item) {
+            if (static_cast<Item*>(it)->getType() == food)
+                static_cast<Food*>(it)->interact(player);
+            scene->removeItem(it);
+            items.removeOne(item);
+            delete it;
+            ui->hpLabel->setText(QString("Health: %1").arg(player->getHealth()));
+            ui->ammoLabel->setText(QString("Ammo: %1").arg(player->getAmmo()));
+        }
+    }
 }

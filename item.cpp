@@ -1,6 +1,12 @@
 #include "item.h"
 
-Item::Item()
+Item::Item(ItemType type, QObject *parent) : QObject(parent)
+{
+    this->type = type;
+}
+
+Item::~Item()
 {
 
 }
+

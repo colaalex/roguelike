@@ -5,6 +5,8 @@ Player::Player(const QVector<QVector<int> > &map, QObject *parent): QObject(pare
     this->map = map;
     relX = 0;
     relY = 0;
+    health = 5;
+    ammo = 0;
 }
 
 Player::Player(int x, int y, const QVector<QVector<int> > &map, QObject *parent) : QObject(parent), QGraphicsItem()
@@ -13,6 +15,8 @@ Player::Player(int x, int y, const QVector<QVector<int> > &map, QObject *parent)
     //used to spawn player at exact position
     relX = x;
     relY = y;
+    health = 5;
+    ammo = 0;
 }
 
 Player::~Player() {}
@@ -43,6 +47,14 @@ void Player::slotGameTimer()
             relY++;
 
     relToAbs();
+
+    QList<QGraphicsItem*> foundItems = scene()->items(mapToScene(0, 0));
+    foreach (QGraphicsItem *item, foundItems) {
+        if (item == this)
+            continue; //we do nothing with player
+        emit signalCheckItem(item);
+    }
+
 }
 
 QRectF Player::boundingRect() const
