@@ -29,14 +29,20 @@ SOURCES += \
     player.cpp \
     world.cpp \
     item.cpp \
-    food.cpp
+    food.cpp \
+    weapon.cpp \
+    rangedweapon.cpp \
+    bullet.cpp
 
 HEADERS += \
     widget.h \
     player.h \
     world.h \
     item.h \
-    food.h
+    food.h \
+    weapon.h \
+    rangedweapon.h \
+    bullet.h
 
 FORMS += \
     widget.ui

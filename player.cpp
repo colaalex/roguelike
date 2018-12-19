@@ -45,6 +45,11 @@ void Player::slotGameTimer()
     if (GetAsyncKeyState(VK_DOWN))
         if (relY < 10 && map.at(relX).at(relY+1) != 1)
             relY++;
+    if (GetAsyncKeyState(VK_SPACE))
+        if (ammo > 0) {
+            ammo--;
+            emit signalShoot();
+        }
 
     relToAbs();
 

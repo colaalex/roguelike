@@ -6,13 +6,13 @@
 
 #include "player.h"
 
-enum ItemType {food, medkit, weapon};
+enum ItemType {food, medkit, meleeWeapon, rangedWeapon};
 
 class Item : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-     Item(ItemType type, QObject *parent=nullptr);
+     Item(int x, int y, ItemType type, QObject *parent=nullptr);
     ~Item();
 
     ItemType getType() {

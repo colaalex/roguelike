@@ -18,6 +18,9 @@ Widget::Widget(QWidget *parent) :
     auto food = new Food(3, 3); //add food to map, hardocoded
     items.append(food);
 
+    auto weapon = new RangedWeapon(4, 4);
+    items.append(weapon);
+
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -34,12 +37,19 @@ Widget::Widget(QWidget *parent) :
     scene->addItem(food);
     food->setPos(300, 300);
 
+    scene->addItem(weapon);
+    weapon->setPos(400, 400);
+
     timer = new QTimer();
     connect(timer, &QTimer::timeout, player, &Player::slotGameTimer);
     timer->start(100);
 
-    connect(player, &Player::signalCheckItem, this, &Widget::slotDeleteItem);
+    bulletTimer = new QTimer();
+    connect(bulletTimer, &QTimer::timeout, this, &Widget::slotMoveBullets);
+    bulletTimer->start(10);
 
+    connect(player, &Player::signalCheckItem, this, &Widget::slotDeleteItem);
+    connect(player, &Player::signalShoot, this, &Widget::slotAddBullet);
 }
 
 Widget::~Widget()
@@ -70,6 +80,8 @@ void Widget::slotDeleteItem(QGraphicsItem *item)
         if (it == item) {
             if (static_cast<Item*>(it)->getType() == food)
                 static_cast<Food*>(it)->interact(player);
+            else if (static_cast<Item*>(it)->getType() == rangedWeapon)
+                static_cast<RangedWeapon*>(it)->interact(player);
             scene->removeItem(it);
             items.removeOne(item);
             delete it;
@@ -77,4 +89,27 @@ void Widget::slotDeleteItem(QGraphicsItem *item)
             ui->ammoLabel->setText(QString("Ammo: %1").arg(player->getAmmo()));
         }
     }
+}
+
+void Widget::slotMoveBullets()
+{
+    foreach(Bullet *bullet, bullets) {
+        if (bullet->getDirection() == Direction::east){
+            bullet->setX(bullet->x() + 1); //just for test
+            bullet->setPos(bullet->x(), bullet->y());
+            //strange bug with moving cam
+            //rethink coordinates, they should change behaviour
+            //TODO add reaction
+        }
+    }
+}
+
+void Widget::slotAddBullet()
+{
+    auto bullet = new Bullet(player->x(), player->y(), Direction::east); //direction hardcoded too
+    //TODO add direction of player
+    bullets.append(bullet);
+    scene->addItem(bullet);
+    bullet->setPos(100, 100);
+    ui->ammoLabel->setText(QString("Ammo: %1").arg(player->getAmmo()));
 }

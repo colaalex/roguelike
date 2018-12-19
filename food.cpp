@@ -1,15 +1,8 @@
 #include "food.h"
 
-Food::Food(int x, int y) : Item(type)
-{
-    relX = x;
-    relY = y;
-}
+Food::Food(int x, int y) : Item(x, y, type) {}
 
-Food::~Food()
-{
-
-}
+Food::~Food() {}
 
 
 void Food::interact(Player *player) {

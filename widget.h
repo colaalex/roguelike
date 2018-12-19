@@ -8,6 +8,8 @@
 #include "player.h"
 #include "item.h"
 #include "food.h"
+#include "rangedweapon.h"
+#include "bullet.h"
 
 namespace Ui {
 class Widget;
@@ -27,7 +29,10 @@ private:
     QGraphicsScene *scene;
     Player *player;
     QTimer *timer;
+    QTimer *bulletTimer;
     QVector <QVector<int> > map;
+
+    QList<Bullet*> bullets; //list of bullets to move them when timer says
 
     QList<QGraphicsItem*> items; //list of all items in game
 
@@ -37,6 +42,8 @@ private:
 
 private slots:
     void slotDeleteItem(QGraphicsItem *item);
+    void slotMoveBullets();
+    void slotAddBullet();
 };
 
 #endif // WIDGET_H
