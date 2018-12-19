@@ -27,12 +27,14 @@ SOURCES += \
         main.cpp \
     widget.cpp \
     player.cpp \
-    world.cpp
+    world.cpp \
+    item.cpp
 
 HEADERS += \
     widget.h \
     player.h \
-    world.h
+    world.h \
+    item.h
 
 FORMS += \
     widget.ui

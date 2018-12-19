@@ -22,6 +22,11 @@ public:
     int getRelX() const;
     int getRelY() const;
 
+    void healthUp(int hp) {
+        //may be called with items like boost, food etc.
+        health = std::min(10, health + hp);
+    }
+
 public slots:
     void slotGameTimer();
 
@@ -33,6 +38,8 @@ private:
     int relX, relY; //coordinates in relative scale (position on game map)
     void relToAbs(); //calculates absolute coordinates (position on scene)
     QVector<QVector<int> > map; //copy of map to check collision with wall
+
+    int health; //health points from 1 to 10, if helath < 1, player dies
 };
 
 #endif // PLAYER_H
