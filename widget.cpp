@@ -122,16 +122,16 @@ void Widget::slotMoveBullets()
 {
     foreach(Bullet *bullet, bullets) {
         if (bullet->getDirection() == Direction::east){
-            bullet->setX(bullet->x() + 100); //just for test
+            bullet->setX(bullet->x() + 50); //just for test
         }
         else if (bullet->getDirection() == Direction::north) {
-            bullet->setY(bullet->y() - 100);
+            bullet->setY(bullet->y() - 50);
         }
         else if (bullet->getDirection() == Direction::south) {
-            bullet->setY(bullet->y() + 100);
+            bullet->setY(bullet->y() + 50);
         }
         else {
-            bullet->setX(bullet->x() - 100);
+            bullet->setX(bullet->x() - 50);
         }
 
         if (bullet->x() > 550 || bullet->x() < 0 || bullet->y() > 550 || bullet->y() < 0) {
@@ -145,10 +145,19 @@ void Widget::slotMoveBullets()
                 scene->removeItem(bullet);
                 bullets.removeOne(bullet);
                 delete bullet;
-            } else
+            } else {
                 bullet->setPos(bullet->x(), bullet->y());
+                QList<QGraphicsItem*> nearItems = scene->items(bullet->mapToScene(0, 0));
+                foreach(QGraphicsItem* it, nearItems) {
+                    if (static_cast<Player*>(it) != nullptr) {
+                        static_cast<Player*>(it)->healthUp(-2); //each hit takes 2 hp
+                    } else if (static_cast<Enemy*>(it) != nullptr) {
+                        static_cast<Enemy*>(it)->healthDown(2);
+                    }
+                }
+            }
         }
-            //TODO add reaction
+            ui->hpLabel->setText(QString("Health: %1").arg(player->getHealth()));
     }
 }
 

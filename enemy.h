@@ -20,6 +20,10 @@ public:
         return direction;
     }
 
+    void healthDown(int hp) {
+        this->hp = std::max(0, this->hp - hp);
+    }
+
 protected:
     QRectF boundingRect() const {
         return QRectF(0, 0, 50, 50);
