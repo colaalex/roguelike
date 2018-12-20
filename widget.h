@@ -10,6 +10,7 @@
 #include "food.h"
 #include "rangedweapon.h"
 #include "bullet.h"
+#include "enemy.h"
 
 namespace Ui {
 class Widget;
@@ -30,9 +31,11 @@ private:
     Player *player;
     QTimer *timer;
     QTimer *bulletTimer;
+    QTimer *enemyTimer;
     QVector <QVector<int> > map;
 
     QList<Bullet*> bullets; //list of bullets to move them when timer says
+    QList<Enemy*> enemies; //list of enemies (behave like turrets)
 
     QList<QGraphicsItem*> items; //list of all items in game
 
@@ -42,10 +45,13 @@ private:
 
     QPair<int, int> absToRel(qreal x, qreal y);
 
+    void addBullet(Bullet *bullet);
+
 private slots:
     void slotDeleteItem(QGraphicsItem *item);
     void slotMoveBullets();
     void slotAddBullet();
+    void slotEnemyShoot(QGraphicsItem *item);
 };
 
 #endif // WIDGET_H

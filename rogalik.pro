@@ -32,7 +32,8 @@ SOURCES += \
     food.cpp \
     weapon.cpp \
     rangedweapon.cpp \
-    bullet.cpp
+    bullet.cpp \
+    enemy.cpp
 
 HEADERS += \
     widget.h \
@@ -42,7 +43,8 @@ HEADERS += \
     food.h \
     weapon.h \
     rangedweapon.h \
-    bullet.h
+    bullet.h \
+    enemy.h
 
 FORMS += \
     widget.ui

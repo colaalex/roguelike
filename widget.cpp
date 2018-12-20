@@ -21,6 +21,9 @@ Widget::Widget(QWidget *parent) :
     auto weapon = new RangedWeapon(4, 4);
     items.append(weapon);
 
+    auto enemy = new Enemy(5, Direction::east); //hardcoded enemy with 5 hp
+    enemies.append(enemy);
+
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -40,6 +43,9 @@ Widget::Widget(QWidget *parent) :
     scene->addItem(weapon);
     weapon->setPos(400, 400);
 
+    scene->addItem(enemy);
+    enemy->setPos(150, 400);
+
     timer = new QTimer();
     connect(timer, &QTimer::timeout, player, &Player::slotGameTimer);
     timer->start(100);
@@ -48,8 +54,13 @@ Widget::Widget(QWidget *parent) :
     connect(bulletTimer, &QTimer::timeout, this, &Widget::slotMoveBullets);
     bulletTimer->start(100);
 
+    enemyTimer = new QTimer();
+    connect(enemyTimer, &QTimer::timeout, enemy, &Enemy::slotGameTimer);
+    enemyTimer->start(1000); //every second it'll check for player in visible zone and try to shoot player
+
     connect(player, &Player::signalCheckItem, this, &Widget::slotDeleteItem);
     connect(player, &Player::signalShoot, this, &Widget::slotAddBullet);
+    connect(enemy, &Enemy::signalAttackPlayer, this, &Widget::slotEnemyShoot);
 }
 
 Widget::~Widget()
@@ -80,6 +91,14 @@ QPair<int, int> Widget::absToRel(qreal x, qreal y)
     i = int(x / 50);
     j = int(y / 50);
     return qMakePair(i, j);
+}
+
+void Widget::addBullet(Bullet *bullet)
+{
+    bullets.append(bullet);
+    scene->addItem(bullet);
+    bullet->setPos(bullet->x(), bullet->y());
+    ui->ammoLabel->setText(QString("Ammo: %1").arg(player->getAmmo()));
 }
 
 void Widget::slotDeleteItem(QGraphicsItem *item)
@@ -136,9 +155,15 @@ void Widget::slotMoveBullets()
 void Widget::slotAddBullet()
 {
     auto bullet = new Bullet(player->x()+25, player->y()+25, player->getDirection());
+    addBullet(bullet);
     //+25 in each coordiante is used to spawn bullet in the middle of tile
-    bullets.append(bullet);
-    scene->addItem(bullet);
-    bullet->setPos(bullet->x(), bullet->y());
-    ui->ammoLabel->setText(QString("Ammo: %1").arg(player->getAmmo()));
+}
+
+void Widget::slotEnemyShoot(QGraphicsItem *item)
+{
+    if (item == player) {
+        auto enemy = static_cast<Enemy*>(QObject::sender());
+        auto bullet = new Bullet(enemy->x() + 25, enemy->y() + 25, enemy->getDirection());
+        addBullet(bullet);
+    }
 }
