@@ -12,6 +12,6 @@ void RangedWeapon::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
     QRect rect;
     rect.setRect(0, 0, 50, 50);
-    painter->setBrush(Qt::cyan);
+    painter->setBrush(QImage("rweapon.png"));
     painter->drawRect(rect);
 }

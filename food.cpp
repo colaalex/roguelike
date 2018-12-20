@@ -12,6 +12,6 @@ void Food::interact(Player *player) {
 void Food::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     QRect rect;
     rect.setRect(0, 0, 50, 50);
-    painter->setBrush(Qt::green);
+    painter->setBrush(QImage("kit.png"));
     painter->drawRect(rect);
 }

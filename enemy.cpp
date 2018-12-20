@@ -11,7 +11,7 @@ void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 {
     QRect rect;
     rect.setRect(0, 0, 50, 50);
-    painter->setBrush(Qt::yellow);
+    painter->setBrush(QImage("enemy.png"));
     painter->drawRect(rect);
 }
 

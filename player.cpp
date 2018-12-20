@@ -85,7 +85,7 @@ void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 {
     QRect rect;
     rect.setRect(0, 0, 50, 50);
-    painter->setBrush(Qt::red);
+    painter->setBrush(QImage("player.png"));
     painter->drawRect(rect);
 }
 
