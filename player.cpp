@@ -7,6 +7,7 @@ Player::Player(const QVector<QVector<int> > &map, QObject *parent): QObject(pare
     relY = 0;
     health = 5;
     ammo = 0;
+    direction = east;
 }
 
 Player::Player(int x, int y, const QVector<QVector<int> > &map, QObject *parent) : QObject(parent), QGraphicsItem()
@@ -17,6 +18,7 @@ Player::Player(int x, int y, const QVector<QVector<int> > &map, QObject *parent)
     relY = y;
     health = 5;
     ammo = 0;
+    direction = east;
 }
 
 Player::~Player() {}
@@ -34,17 +36,25 @@ int Player::getRelY() const
 void Player::slotGameTimer()
 {
     if (GetAsyncKeyState(VK_LEFT))
-        if (relX > 0 && map.at(relX-1).at(relY) != 1)
+        if (relX > 0 && map.at(relX-1).at(relY) != 1) {
             relX--;
+            direction = west;
+        }
     if (GetAsyncKeyState(VK_RIGHT))
-        if (relX < 10 && map.at(relX+1).at(relY) != 1)
+        if (relX < 10 && map.at(relX+1).at(relY) != 1) {
             relX++;
+            direction = east;
+        }
     if (GetAsyncKeyState(VK_UP))
-        if (relY > 0 && map.at(relX).at(relY-1) != 1)
+        if (relY > 0 && map.at(relX).at(relY-1) != 1) {
             relY--;
+            direction = north;
+        }
     if (GetAsyncKeyState(VK_DOWN))
-        if (relY < 10 && map.at(relX).at(relY+1) != 1)
+        if (relY < 10 && map.at(relX).at(relY+1) != 1) {
             relY++;
+            direction = south;
+        }
     if (GetAsyncKeyState(VK_SPACE))
         if (ammo > 0) {
             ammo--;

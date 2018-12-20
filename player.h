@@ -9,6 +9,7 @@
 #include <QVector>
 
 #include "windows.h"
+#include "bullet.h"
 
 
 class Player : public QObject, public QGraphicsItem
@@ -39,6 +40,10 @@ public:
         return ammo;
     }
 
+    Direction getDirection() {
+        return direction;
+    }
+
 public slots:
     void slotGameTimer();
 
@@ -57,6 +62,8 @@ private:
 
     int health; //health points from 1 to 10, if helath < 1, player dies
     int ammo; //amount of ammo, if ammo < 1, player can't shoot
+
+    Direction direction;
 };
 
 #endif // PLAYER_H

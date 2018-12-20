@@ -96,17 +96,28 @@ void Widget::slotMoveBullets()
     foreach(Bullet *bullet, bullets) {
         if (bullet->getDirection() == Direction::east){
             bullet->setX(bullet->x() + 100); //just for test
-            bullet->setPos(bullet->x(), bullet->y());
+        }
+        else if (bullet->getDirection() == Direction::north) {
+            bullet->setY(bullet->y() - 100);
+        }
+        else if (bullet->getDirection() == Direction::south) {
+            bullet->setY(bullet->y() + 100);
+        }
+        else {
+            bullet->setX(bullet->x() - 100);
+        }
+
+        bullet->setPos(bullet->x(), bullet->y());
             //strange bug with moving cam
             //rethink coordinates, they should change behaviour
             //TODO add reaction
-        }
     }
 }
 
 void Widget::slotAddBullet()
 {
-    auto bullet = new Bullet(player->x(), player->y(), Direction::east); //direction hardcoded too
+    auto bullet = new Bullet(player->x()+25, player->y()+25, player->getDirection()); //direction hardcoded too
+    //+25 in each coordiante is used to spawn bullet in the middle of tile
     //TODO add direction of player
     bullets.append(bullet);
     scene->addItem(bullet);
