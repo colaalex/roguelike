@@ -50,6 +50,7 @@ public slots:
 signals:
     void signalCheckItem(QGraphicsItem *item);
     void signalShoot();
+    void signalGameOver();
 
 protected:
     QRectF boundingRect() const;

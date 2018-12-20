@@ -35,6 +35,10 @@ int Player::getRelY() const
 
 void Player::slotGameTimer()
 {
+
+    if (health < 1)
+        emit signalGameOver();
+
     if (GetAsyncKeyState(VK_LEFT))
         if (relX > 0 && map.at(relX-1).at(relY) != 1) {
             relX--;

@@ -1,4 +1,5 @@
 #include "enemy.h"
+#include <QDebug>
 
 Enemy::Enemy(int hp, Direction direction, QObject *parent) :QObject (parent)
 {
@@ -16,6 +17,12 @@ void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 void Enemy::slotGameTimer()
 {
+    qDebug() << hp;
+    if (hp < 1) {
+        emit signalEnemyDies(this);
+        return;
+    }
+
     QPolygonF polygon;
     polygon << mapToScene(0, 0) << mapToScene(0, -300) << mapToScene(0, 300) << mapToScene(300, 0) << mapToScene(-300, 0);
 

@@ -61,6 +61,8 @@ Widget::Widget(QWidget *parent) :
     connect(player, &Player::signalCheckItem, this, &Widget::slotDeleteItem);
     connect(player, &Player::signalShoot, this, &Widget::slotAddBullet);
     connect(enemy, &Enemy::signalAttackPlayer, this, &Widget::slotEnemyShoot);
+    connect(enemy, &Enemy::signalEnemyDies, this, &Widget::slotEnemyDies);
+    connect(player, &Player::signalGameOver, this, &Widget::slotGameOver);
 }
 
 Widget::~Widget()
@@ -151,7 +153,8 @@ void Widget::slotMoveBullets()
                 foreach(QGraphicsItem* it, nearItems) {
                     if (static_cast<Player*>(it) != nullptr) {
                         static_cast<Player*>(it)->healthUp(-2); //each hit takes 2 hp
-                    } else if (static_cast<Enemy*>(it) != nullptr) {
+                    }
+                    if (static_cast<Enemy*>(it) != nullptr) {
                         static_cast<Enemy*>(it)->healthDown(2);
                     }
                 }
@@ -175,4 +178,46 @@ void Widget::slotEnemyShoot(QGraphicsItem *item)
         auto bullet = new Bullet(enemy->x() + 25, enemy->y() + 25, enemy->getDirection());
         addBullet(bullet);
     }
+}
+
+void Widget::slotEnemyDies(Enemy *enemy)
+{
+    scene->removeItem(enemy);
+    enemies.removeOne(enemy);
+    delete enemy;
+}
+
+void Widget::slotGameOver()
+{
+    timer->stop();
+    bulletTimer->stop();
+    enemyTimer->stop();
+    QMessageBox::warning(this, "Game Over", "You died. Game over");
+
+    disconnect(player, &Player::signalCheckItem, this, &Widget::slotDeleteItem);
+    disconnect(player, &Player::signalShoot, this, &Widget::slotAddBullet);
+    disconnect(player, &Player::signalGameOver, this, &Widget::slotGameOver);
+    disconnect(timer, &QTimer::timeout, player, &Player::slotGameTimer);
+    disconnect(bulletTimer, &QTimer::timeout, this, &Widget::slotMoveBullets);
+
+    player->deleteLater();
+
+    foreach(Enemy* enemy, enemies) {
+        disconnect(enemy, &Enemy::signalAttackPlayer, this, &Widget::slotEnemyShoot);
+        disconnect(enemyTimer, &QTimer::timeout, enemy, &Enemy::slotGameTimer);
+        enemy->deleteLater();
+    }
+
+    foreach(QGraphicsItem* item, items) {
+        scene->removeItem(item);
+        items.removeOne(item);
+        delete item;
+    }
+
+    foreach(Bullet* bullet, bullets) {
+        scene->removeItem(bullet);
+        bullets.removeOne(bullet);
+        delete bullet;
+    }
+
 }

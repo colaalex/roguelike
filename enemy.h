@@ -21,7 +21,7 @@ public:
     }
 
     void healthDown(int hp) {
-        this->hp = std::max(0, this->hp - hp);
+        this->hp -= hp;
     }
 
 protected:
@@ -35,6 +35,7 @@ public slots:
 
 signals:
     void signalAttackPlayer(QGraphicsItem* item);
+    void signalEnemyDies(Enemy* enemy);
 
 private:
     int hp; //the same as for player (but it won't have ammo, it's unlimited)

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QTimer>
+#include <QMessageBox>
 
 #include "player.h"
 #include "item.h"
@@ -52,6 +53,8 @@ private slots:
     void slotMoveBullets();
     void slotAddBullet();
     void slotEnemyShoot(QGraphicsItem *item);
+    void slotEnemyDies(Enemy *enemy);
+    void slotGameOver();
 };
 
 #endif // WIDGET_H
