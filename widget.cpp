@@ -74,6 +74,14 @@ void Widget::drawMap()
         }
 }
 
+QPair<int, int> Widget::absToRel(qreal x, qreal y)
+{
+    int i, j;
+    i = int(x / 50);
+    j = int(y / 50);
+    return qMakePair(i, j);
+}
+
 void Widget::slotDeleteItem(QGraphicsItem *item)
 {
     foreach(QGraphicsItem *it, items) {
@@ -107,18 +115,28 @@ void Widget::slotMoveBullets()
             bullet->setX(bullet->x() - 100);
         }
 
-        bullet->setPos(bullet->x(), bullet->y());
-            //strange bug with moving cam
-            //rethink coordinates, they should change behaviour
+        if (bullet->x() > 550 || bullet->x() < 0 || bullet->y() > 550 || bullet->y() < 0) {
+            scene->removeItem(bullet);
+            bullets.removeOne(bullet);
+            delete bullet;
+        } else {
+            QPair<int, int> absCor = absToRel(bullet->x(), bullet->y());
+            if (map.at(absCor.first).at(absCor.second) == 1) {
+                //if it collides with wall (tile)
+                scene->removeItem(bullet);
+                bullets.removeOne(bullet);
+                delete bullet;
+            } else
+                bullet->setPos(bullet->x(), bullet->y());
+        }
             //TODO add reaction
     }
 }
 
 void Widget::slotAddBullet()
 {
-    auto bullet = new Bullet(player->x()+25, player->y()+25, player->getDirection()); //direction hardcoded too
+    auto bullet = new Bullet(player->x()+25, player->y()+25, player->getDirection());
     //+25 in each coordiante is used to spawn bullet in the middle of tile
-    //TODO add direction of player
     bullets.append(bullet);
     scene->addItem(bullet);
     bullet->setPos(bullet->x(), bullet->y());

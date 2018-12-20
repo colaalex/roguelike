@@ -6,7 +6,7 @@
 
 #include "player.h"
 
-enum ItemType {food, medkit, meleeWeapon, rangedWeapon};
+enum ItemType {food, meleeWeapon, rangedWeapon};
 
 class Item : public QObject, public QGraphicsItem
 {

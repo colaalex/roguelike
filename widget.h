@@ -40,6 +40,8 @@ private:
 
     void drawMap();
 
+    QPair<int, int> absToRel(qreal x, qreal y);
+
 private slots:
     void slotDeleteItem(QGraphicsItem *item);
     void slotMoveBullets();
