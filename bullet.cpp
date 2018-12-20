@@ -3,8 +3,8 @@
 
 Bullet::Bullet(double x, double y, Direction direction, QObject *parent) : QObject (parent)
 {
-    relX = x;
-    relY = y;
+    this->setX(x);
+    this->setY(y);
     this->direction = direction;
 }
 

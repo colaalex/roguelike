@@ -46,7 +46,7 @@ Widget::Widget(QWidget *parent) :
 
     bulletTimer = new QTimer();
     connect(bulletTimer, &QTimer::timeout, this, &Widget::slotMoveBullets);
-    bulletTimer->start(10);
+    bulletTimer->start(100);
 
     connect(player, &Player::signalCheckItem, this, &Widget::slotDeleteItem);
     connect(player, &Player::signalShoot, this, &Widget::slotAddBullet);
@@ -95,7 +95,7 @@ void Widget::slotMoveBullets()
 {
     foreach(Bullet *bullet, bullets) {
         if (bullet->getDirection() == Direction::east){
-            bullet->setX(bullet->x() + 1); //just for test
+            bullet->setX(bullet->x() + 100); //just for test
             bullet->setPos(bullet->x(), bullet->y());
             //strange bug with moving cam
             //rethink coordinates, they should change behaviour
@@ -110,6 +110,6 @@ void Widget::slotAddBullet()
     //TODO add direction of player
     bullets.append(bullet);
     scene->addItem(bullet);
-    bullet->setPos(100, 100);
+    bullet->setPos(bullet->x(), bullet->y());
     ui->ammoLabel->setText(QString("Ammo: %1").arg(player->getAmmo()));
 }
